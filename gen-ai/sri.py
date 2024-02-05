@@ -62,7 +62,7 @@ def scraping_hashtags(platform:str):
     scraped_hashtags=chain.run(inputs)
     return scraped_hashtags
     
-
+# SCRAPE WITH FEAUTURES TO AVOID  INFINITE LOOP 
 
 
 
@@ -108,4 +108,4 @@ You are the Content Strategist at a company .Your role is to find the most relev
  to increase the client's social media engagement.
     """
 
-print(hashtag_agent( {"input":"Im posting a ad for coaching classes on instagram?"}))
+print(hashtag_agent( {"input":"Im posting a ad for coaching classes on LinkedIN?"}))
