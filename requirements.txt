@@ -2,6 +2,8 @@ langchain
 OpenAI
 python-dotenv
 ritetag
+huggingface_hub
+     
 google
 av
 numpy
