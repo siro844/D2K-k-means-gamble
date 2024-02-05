@@ -2,3 +2,9 @@ langchain
 OpenAI
 python-dotenv
 ritetag
+google
+av
+numpy
+torch
+transformers
+pillow
