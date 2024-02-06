@@ -135,7 +135,7 @@ hashtag_agent=initialize_agent(
     llm=hashtag_llm
     )
 
-# hashtag_agent.run("I am trying to find a job as software dev on linkedin")
+
 
 caption_tool=Tool(
     name="caption",
@@ -292,6 +292,7 @@ Script_Agent=initialize_agent(
     llm=script_llm
     )
 
-print(Script_Agent.run(" Generate a script for current events in Mumbai"))
+# print(Script_Agent.run(" Generate a script for current events in Mumbai"))
 # print(popularity_increase_agent.run("#dogs,#cats#pet lover"))
 
+# hashtag_agent.run("Spending a day on beach")
