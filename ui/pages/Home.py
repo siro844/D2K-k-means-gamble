@@ -6,7 +6,7 @@ def get_img_as_base64(file):
         data = f.read()
     return base64.b64encode(data).decode()
 
-img = get_img_as_base64("ui/Home.png")
+img = get_img_as_base64("ui/assets/Home.png")
 
 custom_css = """
     <style>
@@ -62,6 +62,18 @@ page_bg_img = f'''
         [data-testid="stHeader"]{{
             background-color: rgba(0, 0, 0, 0);
         }}
+        [data-testid="stVerticalBlock"]{{
+            displsy:flex;
+        }}
+        [data-testid="baseButton-secondary"]{{
+            border-sizing:box-border;
+            background-color: blue;
+            margin-top:20px;
+            margin-left:250px;
+            height:50px;
+            width:250px;
+            border-radius:20px;  
+        }}
         p {{
             font-size:15px;
         }}
@@ -91,6 +103,9 @@ st.radio("", ["Instagram", "Youtube", "Facebook"])
 
 st.multiselect("Target Audience", ["Kids", "Teenagers", "Adults", "Senior Citizens"])
 
-submit = st.button("Submit")
+submit = st.button("Generate Hashtags and caption")
 if submit:
-    st.text_area("The relevant hashtags are")
+    st.markdown("#### The relevant hashtags are :")
+    st.text_area("")
+    st.markdown("#### The relevant caption is :")
+    st.text_area("",key="12")

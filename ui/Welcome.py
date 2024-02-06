@@ -1,12 +1,14 @@
 import base64
 import streamlit as st
+
+
 def get_img_as_base64(file):
     with open(file, "rb") as f:
         data = f.read()
     return base64.b64encode(data).decode()
 
 
-img = get_img_as_base64("ui/Landing.png")
+img = get_img_as_base64("ui/assets/Landing.png")
 
 custom_css = """
     <style>
@@ -42,15 +44,17 @@ page_bg_img = f'''
         [data-testid="baseButton-secondary"]{{
             border-sizing:box-border;
             background-color: blue;
-            margin-top: 70%;
+            margin-bottom:20%;
             margin-left: 0px;
             height:70px;
             width:450px;
             border-radius:50px;    
         }}
+        //[data-testid="stSidebarContent"]{{visibility: hidden;}}
     </style>
     '''
 st.markdown(page_bg_img, unsafe_allow_html=True)
 #st.button("Get Started")
-st.markdown('<button style =" border-sizing:box-border;background-color: blue;margin-top: 70%;margin-left: 0px;height:70px;width:450px;border-radius:50px;    "><a href="/Home" target="_self" style="font-size:25px;color:white;text-decoration:none;">Get Started</a></button>', unsafe_allow_html=True)
+#st.markdown('<style>[data-testid="stSidebarContent"]{{visibility: hidden;}}</style>', unsafe_allow_html=True)
+st.markdown('<button style =" border-sizing:box-border;background-color: blue;margin-top:55%;margin-left: 0px;height:70px;width:450px;border-radius:50px;    "><a href="/Home" target="_self" style="font-size:25px;color:white;text-decoration:none;">Get Started</a></button>', unsafe_allow_html=True)
 #st.markdown(custom_css, unsafe_allow_html=True)
