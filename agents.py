@@ -131,7 +131,7 @@ hashtag_agent=initialize_agent(
     tools=hashtag_tools,
     verbose=True,
     name="hashtag_agent",
-    max_iterations=8,
+    max_iterations=5,
     llm=hashtag_llm
     )
 
@@ -161,3 +161,43 @@ caption_agent=initialize_agent(
     llm=hashtag_llm
     )
 # caption_agent.run("I am trying to find a job as software dev on linkedin")
+popularity_increase_LLM=OpenAI(
+    model_name="gpt-3.5-turbo-instruct",
+    
+)
+def most_used_hashtags(platform:str):
+    popularity_llm=OpenAI(model_name="gpt-3.5-turbo-instruct")
+    template="""
+    Extract the number of time the hashtags is used in this platform {platform}
+    """
+    popularity_prompt=PromptTemplate(
+        input_variables=["platform"],
+        template=template
+    )
+    chain=LLMRequestsChain(llm_chain=LLMChain(llm=popularity_llm,prompt=popularity_prompt))
+    inputs={
+        "platform":platform,
+        "url":f"https://www.google.com/search?q=+hashtag+mentions+for+"+platform.replace(" ","+")   
+    }
+    scraped_hashtags=chain.run(inputs)
+    return scraped_hashtags
+
+most_used_hashtags_tool=Tool(
+    name="most_used_hashtags",
+    func=most_used_hashtags,
+    description="""
+    
+    Always use this in combination with the feauture_extraction tool and compare the results with the trending_hashtags tool.
+    Compare them to then find the predicted percentage of increase in engaggement for the client.
+    Scrape the number of times the hashtags is used on a platform. Use this in case the trending hashtags are not available on the platform you are looking for. This tool will scrape the number of times the hashtags is used for you. """,
+    input_variables=["platform"],
+    output_variables=["most_used_hashtags"]
+)
+popularity_increase_agent=initialize_agent(
+    agent='zero-shot-react-description',
+    tools=[feauture_extraction_tool,most_used_hashtags_tool,trending_hashtags_tool],
+    verbose=True,
+    name="popularity_increase_agent",
+    max_iterations=5,
+    llm=popularity_increase_LLM
+    )
