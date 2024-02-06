@@ -84,17 +84,7 @@ def generate_captions(text:str):
 
 
 
-caption_tool=Tool(
-    name="caption",
-    func=generate_captions,
-    description="""
-    This tool helps you to generate the best caption for a given text. The caption is generated depending on the context and the tone is relevant to the platform to its being posted on.
-    Always use this tool in combination with feauture extraction tool.
-    .""",
-    input_variables=["text"],
-    output_variables=["caption"]
 
-)
 trending_hashtags_tool=Tool(
     name="trending_hashtags",
     func=get_trending_hashtags,
@@ -132,19 +122,42 @@ scraping_hashtags_tool=Tool(
 )
 
 
-tools=[feauture_extraction_tool,scraping_hashtags_tool,caption_tool]
+hashtag_tools=[feauture_extraction_tool,scraping_hashtags_tool]
 hashtag_llm=OpenAI(
     model_name="gpt-3.5-turbo-instruct",
     )
 hashtag_agent=initialize_agent(
     agent='zero-shot-react-description',
-    tools=tools,
+    tools=hashtag_tools,
     verbose=True,
     name="hashtag_agent",
     max_iterations=8,
     llm=hashtag_llm
     )
 
+# hashtag_agent.run("I am trying to find a job as software dev on linkedin")
 
+caption_tool=Tool(
+    name="caption",
+    func=generate_captions,
+    description="""
+    This tool helps you to generate the best caption for a given text. The caption is generated depending on the context and the tone is relevant to the platform to its being posted on.
+    Always use this tool in combination with feauture extraction tool.
+    .""",
+    input_variables=["text"],
+    output_variables=["caption"]
+)
 
-hashtag_agent.run("I am a software engineer and I am looking for a job . i want to post this on linkedin")
+caption_llm=OpenAI(
+    model_name="gpt-3.5-turbo-instruct",
+    )
+caption_tools=[feauture_extraction_tool,caption_tool]
+caption_agent=initialize_agent(
+    agent='zero-shot-react-description',
+    tools=caption_tools,
+    verbose=True,
+    name="caption_agent",
+    max_iterations=8,
+    llm=hashtag_llm
+    )
+caption_agent.run("I am trying to find a job as software dev on linkedin")
