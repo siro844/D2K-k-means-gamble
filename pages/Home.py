@@ -143,6 +143,7 @@ if submit:
         st.session_state['text'] = ''
     st.session_state['text'] = st.text_area("Relevant hashtags are :", st.session_state['text'])
     captions=agents.caption_agent(final_text)
+    st.session_state['text'] = captions  
     st.session_state['text'] = st.text_area("Relevant caption is :", st.session_state['text'],key="23")
      
 
