@@ -2,7 +2,8 @@ import streamlit as st
 import base64
 from pathlib import Path
 import sys
-
+import os
+import tempfile
 import surabhi
 
 
@@ -11,7 +12,7 @@ def get_img_as_base64(file):
         data = f.read()
     return base64.b64encode(data).decode()
 
-
+file_path = ''
 img = get_img_as_base64("Home.png")
 
 custom_css = """
@@ -87,11 +88,11 @@ if input_method == "Text":
 
 elif input_method == "Photo":
     image_input = st.file_uploader("Generate hashtags for this image", type=['jpg', 'jpeg', 'png', 'webp'])
-    if  is not None:
+    if image_input is not None:
     # Save the uploaded file to a temporary location
-    temp_file_path = os.path.join(tempfile.gettempdir(), uploaded_file.name)
-    with open(temp_file_path, 'wb') as temp_file:
-        temp_file.write(uploaded_file.read())
+        file_path = os.path.join('upload', image_input.name)
+        tfile = tempfile.NamedTemporaryFile()
+        tfile.write(image_input.getvalue())
 
 elif input_method == "Video":
     st.file_uploader("Generate hashtags for this image", type=['mp4', 'avi'])
@@ -108,8 +109,8 @@ if submit:
     if input_method == 'Text':
         final_text = text_input
     elif input_method == 'Image':
-        # final_text = surabhi.image_to_text()
-        print(image_input)
+        final_text = surabhi.image_to_text(file_path)
+        st.write(final_text)
     elif input_method == 'Video':
         pass
         # final_text = surabhi.video_to_text()
