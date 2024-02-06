@@ -122,12 +122,12 @@ if submit:
     elif input_method == 'Photo':
         conv_img = PIL.Image.open(file_path)
         final_text = surabhi.image_to_text(conv_img) 
-        hashtags=agents.hashtag_agent.run(final_text)
+        hashtags=agents.hashtag_agent.run(f" this is the decription of the iamge perform feauture extraction on this :{final_text}")
         st.session_state['text'] = hashtags  
     elif input_method == 'Video':
          final_video = surabhi.video_to_text()
          hashtags=agents.hashtag_agent.run(final_video)
-         hashtags=agents.hashtag_agent.run(final_video)
+
         #  st.write(hashtags)
     if 'text' not in st.session_state:
         st.session_state['text'] = ''
