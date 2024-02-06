@@ -292,7 +292,8 @@ Script_Agent=initialize_agent(
     llm=script_llm
     )
 
-# print(Script_Agent.run(" Generate a script for current events in Mumbai"))
+# # print(Script_Agent.run(" Generate a script for current events in Mumbai"))
+# print(caption_agent.run("A good day at beach"))
 # print(popularity_increase_agent.run("#dogs,#cats#pet lover"))
 
 # hashtag_agent.run("Spending a day on beach")

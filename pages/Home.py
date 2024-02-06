@@ -123,6 +123,7 @@ submit = st.button("Generate hashtags and captions")
 final_text = ''
 hashtags=''
 if submit:
+
     if input_method == 'Text':
         final_text = text_input
         hashtags = agents.hashtag_agent.run(f"{final_text}")
@@ -141,11 +142,10 @@ if submit:
         st.session_state['text'] = ''
         st.session_state['text'] = ''
     st.session_state['text'] = st.text_area("Relevant hashtags are :", st.session_state['text'])
-        
-    # st.session_state['text'] = st.text_area("Relevant caption is :", st.session_state['text'],key="23")
+    captions=agents.caption_agent(final_text)
+    st.session_state['text'] = st.text_area("Relevant caption is :", st.session_state['text'],key="23")
      
-        
-    
+
     
 # if 'text' not in st.session_state:
 #     st.session_state['text'] = ''
