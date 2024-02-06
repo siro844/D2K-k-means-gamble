@@ -66,8 +66,7 @@ def generate_captions(text:str):
     caption_llm=OpenAI(model_name="gpt-3.5-turbo-instruct")
     template="""
     Generate a caption for the following {text}.
-    Create the caption depending on the context and the tone should be relevant to the platform to its being posted on.
-    i.e tone should be professional for linkedin and casual for instagram,twitter and others.
+    The caption should be catchy.
     """
     caption_prompt=PromptTemplate(
         input_variables=["text"],
