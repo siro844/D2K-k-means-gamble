@@ -71,6 +71,14 @@ page_bg_img = f'''
         [data-testid="stHeader"]{{
             background-color: rgba(0, 0, 0, 0);
         }}
+          [data-testid="baseButton-secondary"]{{
+            border-sizing:box-border;
+            background-color: blue;
+            margin-left: 250px;
+            height:50px;
+            width:250px;
+            border-radius:50px;    
+        }}
         p {{
             font-size:15px;
         }}
@@ -111,7 +119,7 @@ platform =st.radio("", ["Instagram", "Youtube", "Facebook"])
 
 st.multiselect("Target Audience", ["Kids", "Teenagers", "Adults", "Senior Citizens"])
 
-submit = st.button("Submit")
+submit = st.button("Generate hashtags and captions")
 final_text = ''
 hashtags=''
 if submit:
@@ -131,9 +139,13 @@ if submit:
         #  st.write(hashtags)
     if 'text' not in st.session_state:
         st.session_state['text'] = ''
+        st.session_state['text'] = ''
     st.session_state['text'] = st.text_area("Relevant hashtags are :", st.session_state['text'])
-
-
+        
+    st.session_state['text'] = st.text_area("Relevant caption is :", st.session_state['text'],key="23")
+     
+        
+    
     
 # if 'text' not in st.session_state:
 #     st.session_state['text'] = ''
