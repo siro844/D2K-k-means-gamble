@@ -1,14 +1,17 @@
 import streamlit as st
 import base64
-from gen_ai.surabhi.py import image_to_text
-from gen_ai.surabhi.py import video_to_text
+from pathlib import Path
+import sys
+
+from gen_ai.surabhi import image_to_text
 
 def get_img_as_base64(file):
     with open(file, "rb") as f:
         data = f.read()
     return base64.b64encode(data).decode()
 
-img = get_img_as_base64("ui/assets/Home.png")
+
+img = get_img_as_base64("ui/Home.png")
 
 custom_css = """
     <style>
@@ -64,18 +67,6 @@ page_bg_img = f'''
         [data-testid="stHeader"]{{
             background-color: rgba(0, 0, 0, 0);
         }}
-        [data-testid="stVerticalBlock"]{{
-            displsy:flex;
-        }}
-        [data-testid="baseButton-secondary"]{{
-            border-sizing:box-border;
-            background-color: blue;
-            margin-top:20px;
-            margin-left:250px;
-            height:50px;
-            width:250px;
-            border-radius:20px;  
-        }}
         p {{
             font-size:15px;
         }}
@@ -105,9 +96,12 @@ st.radio("", ["Instagram", "Youtube", "Facebook"])
 
 st.multiselect("Target Audience", ["Kids", "Teenagers", "Adults", "Senior Citizens"])
 
-submit = st.button("Generate Hashtags and caption")
+submit = st.button("Submit")
 if submit:
-    st.markdown("#### The relevant hashtags are :")
-    st.text_area("")
-    st.markdown("#### The relevant caption is :")
-    st.text_area("",key="12")
+    # if input_method == 'Text':
+
+    # if input_method == 'Image':
+    
+    st.text_area("The relevant hashtags are")
+
+
