@@ -5,6 +5,7 @@ import sys
 import os
 import tempfile
 import surabhi
+import PIL.Image
 
 
 def get_img_as_base64(file):
@@ -87,12 +88,13 @@ if input_method == "Text":
     text_input = st.text_area("Enter description for the post")
 
 elif input_method == "Photo":
-    image_input = st.file_uploader("Generate hashtags for this image", type=['jpg', 'jpeg', 'png', 'webp'])
+    image_input = st.file_uploader("Generate hashtags for this image")
     if image_input is not None:
     # Save the uploaded file to a temporary location
         file_path = os.path.join('upload', image_input.name)
         with open(file_path, "wb") as f:
             f.write(image_input.getvalue())
+        
 
 elif input_method == "Video":
     st.file_uploader("Generate hashtags for this image", type=['mp4', 'avi'])
@@ -108,12 +110,10 @@ final_text = ''
 if submit:
     if input_method == 'Text':
         final_text = text_input
-    elif input_method == 'Image':
-        final_text = surabhi.image_to_text(file_path)
-        st.write(final_text)
+    elif input_method == 'Photo':
+        conv_img = PIL.Image.open(file_path)
+        final_text = surabhi.image_to_text(conv_img)    
     elif input_method == 'Video':
-        pass
-        # final_text = surabhi.video_to_text()
+        
     st.text_area("The relevant hashtags are")
 
-st.write(final_text)
