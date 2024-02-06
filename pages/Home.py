@@ -118,29 +118,29 @@ if submit:
     if input_method == 'Text':
         final_text = text_input
         hashtags = agents.hashtag_agent.run(f"{final_text}")
-        st.session_state['text'] = hashtags
-    elif input_method == 'Image':
-        final_text = surabhi.image_to_text(file_path)
-        hashtags=agents.hashtag_agent.run(final_text)
-        st.write(hashtags)
+        st.session_state['text'] = hashtags  
     elif input_method == 'Photo':
         conv_img = PIL.Image.open(file_path)
-        final_text = surabhi.image_to_text(conv_img)    
+        final_text = surabhi.image_to_text(conv_img) 
+        hashtags=agents.hashtag_agent.run(final_text)
+        st.session_state['text'] = hashtags  
     elif input_method == 'Video':
          final_video = surabhi.video_to_text()
          hashtags=agents.hashtag_agent.run(final_video)
          hashtags=agents.hashtag_agent.run(final_video)
         #  st.write(hashtags)
+    if 'text' not in st.session_state:
+        st.session_state['text'] = ''
+    st.session_state['text'] = st.text_area("Relevant hashtags are :", st.session_state['text'])
+     
         
     
     
-if 'text' not in st.session_state:
-    st.session_state['text'] = ''
+# if 'text' not in st.session_state:
+#     st.session_state['text'] = ''
 
-# Create a text area and get the entered text
-st.session_state['text'] = st.text_area("Relevant hashtags are :", st.session_state['text'])
-st.write(f'Relevant hashtags are : {st.session_state["text"]}')
-# st.write(final_text)
-        
-    st.text_area("The relevant hashtags are")
+# # Create a text area and get the entered text
+# st.session_state['text'] = st.text_area("Relevant hashtags are :", st.session_state['text'])
+
+
 
