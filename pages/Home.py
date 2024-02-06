@@ -91,8 +91,8 @@ elif input_method == "Photo":
     if image_input is not None:
     # Save the uploaded file to a temporary location
         file_path = os.path.join('upload', image_input.name)
-        tfile = tempfile.NamedTemporaryFile()
-        tfile.write(image_input.getvalue())
+        with open(file_path, "wb") as f:
+            f.write(image_input.getvalue())
 
 elif input_method == "Video":
     st.file_uploader("Generate hashtags for this image", type=['mp4', 'avi'])
