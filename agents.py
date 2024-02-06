@@ -131,7 +131,7 @@ hashtag_agent=initialize_agent(
     tools=hashtag_tools,
     verbose=True,
     name="hashtag_agent",
-    max_iterations=8,
+    max_iterations=5,
     llm=hashtag_llm
     )
 
@@ -161,3 +161,109 @@ caption_agent=initialize_agent(
     llm=hashtag_llm
     )
 # caption_agent.run("I am trying to find a job as software dev on linkedin")
+popularity_increase_LLM=OpenAI(
+    model_name="gpt-3.5-turbo-instruct",
+    
+)
+def most_used_hashtags(platform:str):
+    popularity_llm=OpenAI(model_name="gpt-3.5-turbo-instruct")
+    template="""
+    Extract the number of time the hashtags is used in this platform {platform}
+    """
+    popularity_prompt=PromptTemplate(
+        input_variables=["platform"],
+        template=template
+    )
+    chain=LLMRequestsChain(llm_chain=LLMChain(llm=popularity_llm,prompt=popularity_prompt))
+    inputs={
+        "platform":platform,
+        "url":f"https://www.google.com/search?q=+hashtag+mentions+for+"+platform.replace(" ","+")   
+    }
+    scraped_hashtags=chain.run(inputs)
+    return scraped_hashtags
+
+most_used_hashtags_tool=Tool(
+    name="most_used_hashtags",
+    func=most_used_hashtags,
+    description="""
+    
+    Always use this in combination with the feauture_extraction tool and compare the results with the trending_hashtags tool.
+    Compare them to then find the predicted percentage of increase in engaggement for the client.
+    Scrape the number of times the hashtags is used on a platform. Use this in case the trending hashtags are not available on the platform you are looking for. This tool will scrape the number of times the hashtags is used for you. """,
+    input_variables=["platform"],
+    output_variables=["most_used_hashtags"]
+)
+popularity_increase_agent=initialize_agent(
+    agent='zero-shot-react-description',
+    tools=[feauture_extraction_tool,most_used_hashtags_tool,trending_hashtags_tool],
+    verbose=True,
+    name="popularity_increase_agent",
+    max_iterations=5,
+    llm=popularity_increase_LLM
+    )
+
+def script_generation(text:str):
+    script_llm=OpenAI(model_name="gpt-3.5-turbo-instruct")
+    template="""
+    Generate a script for the current events for the location{location}
+    Create the script depending on the context and the tone should be relevant to the platform to its being posted on.
+    i.e tone should be professional for linkedin and casual for instagram,twitter and others.
+    """
+    script_prompt=PromptTemplate(
+        input_variables=["location"],
+        template=template
+    )
+    chain=LLMChain(llm=script_llm,prompt=script_prompt)
+    inputs={
+        "location":text
+    }
+    script=chain.run(inputs)
+    return script
+
+def scrape_current_events(input=''):
+    current_events_llm=OpenAI(model_name="gpt-3.5-turbo-instruct")
+    template="""
+    Extract the current events for the location{location}
+    """
+    current_events_prompt=PromptTemplate(
+        input_variables=["location"],
+        template=template
+    )
+    chain=LLMRequestsChain(llm=current_events_llm,prompt=current_events_prompt)
+    inputs={
+        "location":input,
+        "url":f"https://www.google.com/search?q=current+events+for+"+input.replace(" ","+"),
+    }
+    current_events=chain.run(inputs)
+    return current_events
+
+script_llm=OpenAI(model_name="gpt-3.5-turbo-instruct")
+
+scraping_current_events_tool=Tool(
+    name="scraping_current_events",
+    func=scrape_current_events,
+    description="""
+    Always use this first for getting current events.
+    Scrape the current events for a location. Use this in case the current events are not available on the location you are looking for. This tool will scrape the current events for you. """,
+    input_variables=["location"],
+    output_variables=["current_events"]
+)
+script_generation_tool=Tool(
+    name="script_generation",
+    func=script_generation,
+    description="""
+    This tool helps you to generate the best script for a given location. The script is generated depending on the context and the tone is relevant to the platform to its being posted on.
+    Always use this tool in combination with scraping_current_events tool.
+    .""",
+    input_variables=["location"],
+    output_variables=["script"]
+)
+Script_Agent=initialize_agent(
+    agent='zero-shot-react-description',
+    tools=[scraping_current_events_tool,script_generation_tool],
+    verbose=True,
+    name="Script_Agent",
+    max_iterations=5,
+    llm=script_llm
+    )
+

@@ -106,7 +106,7 @@ elif input_method == "Photo":
         
 
 elif input_method == "Video":
-        video_input = st.file_uploader("Generate hashtags for this image", type=['jpg', 'jpeg', 'png', 'webp'])
+        video_input = st.file_uploader("Generate hashtags for this image")
         if video_input is not None:
     # Save the uploaded file to a temporary location
             file_path = os.path.join('upload', video_input.name)
@@ -130,12 +130,12 @@ if submit:
     elif input_method == 'Photo':
         conv_img = PIL.Image.open(file_path)
         final_text = surabhi.image_to_text(conv_img) 
-        hashtags=agents.hashtag_agent.run(final_text)
+        hashtags=agents.hashtag_agent.run(f" this is the decription of the iamge perform feauture extraction on this :{final_text}")
         st.session_state['text'] = hashtags  
     elif input_method == 'Video':
-         final_video = surabhi.video_to_text()
+         final_video = surabhi.video_to_text(file_path)
          hashtags=agents.hashtag_agent.run(final_video)
-         hashtags=agents.hashtag_agent.run(final_video)
+
         #  st.write(hashtags)
     if 'text' not in st.session_state:
         st.session_state['text'] = ''
