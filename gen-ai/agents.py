@@ -40,7 +40,6 @@ def extract_feautures(text):
     )
     
     final_prompt=prompt.format(query=text)
-    print(final_prompt)
     feautures =feauture_extraction_llm(final_prompt)
     return feautures
 
@@ -61,12 +60,41 @@ def scraping_hashtags(platform:str):
     }
     scraped_hashtags=chain.run(inputs)
     return scraped_hashtags
+
+
+def generate_captions(text:str):
+    caption_llm=OpenAI(model_name="gpt-3.5-turbo-instruct")
+    template="""
+    Generate a caption for the following {text}.
+    Create the caption depending on the context and the tone should be relevant to the platform to its being posted on.
+    i.e tone should be professional for linkedin and casual for instagram,twitter and others.
+    """
+    caption_prompt=PromptTemplate(
+        input_variables=["text"],
+        template=template
+    )
+    chain=LLMChain(llm=caption_llm,prompt=caption_prompt)
+    inputs={
+        "text":text
+    }
+    caption=chain.run(inputs)
+    return caption
     
 # SCRAPE WITH FEAUTURES TO AVOID  INFINITE LOOP 
 
 
 
+caption_tool=Tool(
+    name="caption",
+    func=generate_captions,
+    description="""
+    This tool helps you to generate the best caption for a given text. The caption is generated depending on the context and the tone is relevant to the platform to its being posted on.
+    Always use this tool in combination with feauture extraction tool.
+    .""",
+    input_variables=["text"],
+    output_variables=["caption"]
 
+)
 trending_hashtags_tool=Tool(
     name="trending_hashtags",
     func=get_trending_hashtags,
@@ -82,6 +110,11 @@ feauture_extraction_tool=Tool(
     name="feauture_extraction",
     func=extract_feautures,
     description="""
+    You are a content strategist at a company.
+    You are responsible to find relevant hashtags for the content that is being posted on social media and catchy captions for it.
+    For every good performance, you will be rewarded with a bonus.
+    In the same way you are punished for bad performance.
+    Use all tools provided to you to give the best results.
     Always use this in combination with the trending_hashtags tool and the scraping_hashtags tool.
     Use this tool to extract feautures from text.Then the extracted feautures can be used to find which hashtag is more relevant to the text.""",
     input_variables=["text"],
@@ -99,7 +132,7 @@ scraping_hashtags_tool=Tool(
 )
 
 
-tools=[feauture_extraction_tool,scraping_hashtags_tool]
+tools=[feauture_extraction_tool,scraping_hashtags_tool,caption_tool]
 hashtag_llm=OpenAI(
     model_name="gpt-3.5-turbo-instruct",
     )
@@ -111,11 +144,7 @@ hashtag_agent=initialize_agent(
     max_iterations=8,
     llm=hashtag_llm
     )
-hashtag_prompt="""
-You are the Content Strategist at a company .Your role is to find the most relevant hashtags
- to increase the client's social media engagement.
-    """
-
-print(hashtag_agent( {"input":"Smiling dog who is playing with a ball and eating food"}))
 
 
+
+hashtag_agent.run("I am a software engineer and I am looking for a job . i want to post this on linkedin")
