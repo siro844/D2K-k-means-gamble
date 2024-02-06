@@ -3,7 +3,8 @@ import base64
 from pathlib import Path
 import sys
 
-from gen_ai.surabhi import image_to_text
+import surabhi
+
 
 def get_img_as_base64(file):
     with open(file, "rb") as f:
@@ -11,7 +12,7 @@ def get_img_as_base64(file):
     return base64.b64encode(data).decode()
 
 
-img = get_img_as_base64("ui/Home.png")
+img = get_img_as_base64("Home.png")
 
 custom_css = """
     <style>
@@ -82,10 +83,15 @@ st.markdown("## Select input method")
 input_method = st.selectbox("", ["Text", "Photo", "Video"])
 
 if input_method == "Text":
-    st.text_area("Enter description for the post")
+    text_input = st.text_area("Enter description for the post")
 
 elif input_method == "Photo":
-    st.file_uploader("Generate hashtags for this image", type=['jpg', 'jpeg', 'png', 'webp'])
+    image_input = st.file_uploader("Generate hashtags for this image", type=['jpg', 'jpeg', 'png', 'webp'])
+    if  is not None:
+    # Save the uploaded file to a temporary location
+    temp_file_path = os.path.join(tempfile.gettempdir(), uploaded_file.name)
+    with open(temp_file_path, 'wb') as temp_file:
+        temp_file.write(uploaded_file.read())
 
 elif input_method == "Video":
     st.file_uploader("Generate hashtags for this image", type=['mp4', 'avi'])
@@ -97,11 +103,16 @@ st.radio("", ["Instagram", "Youtube", "Facebook"])
 st.multiselect("Target Audience", ["Kids", "Teenagers", "Adults", "Senior Citizens"])
 
 submit = st.button("Submit")
+final_text = ''
 if submit:
-    # if input_method == 'Text':
-
-    # if input_method == 'Image':
-    
+    if input_method == 'Text':
+        final_text = text_input
+    elif input_method == 'Image':
+        # final_text = surabhi.image_to_text()
+        print(image_input)
+    elif input_method == 'Video':
+        pass
+        # final_text = surabhi.video_to_text()
     st.text_area("The relevant hashtags are")
 
-
+st.write(final_text)

@@ -4,7 +4,7 @@ python-dotenv
 ritetag
 huggingface_hub
      
-google-generativeaibase64
+google-generativeai
 av
 numpy
 torch

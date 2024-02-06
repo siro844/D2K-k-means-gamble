@@ -1,5 +1,0 @@
-setup.py
-D2K.egg-info/PKG-INFO
-D2K.egg-info/SOURCES.txt
-D2K.egg-info/dependency_links.txt
-D2K.egg-info/top_level.txt

@@ -55,7 +55,3 @@ def video_to_text(video):
   return caption
 
 
-image = Image.open('download.jpg')
-image_to_text(image)
-video = "pexels-micheile-visualstoriesnl-8481419 (1080p).mp4"
-video_to_text(video)
