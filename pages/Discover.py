@@ -105,10 +105,15 @@ submit = st.button("Inspire me")
 # final_text = ''
 # hashtags=''
 
-generated_script
+if 'text' not in st.session_state:
+            st.session_state['text'] = ''
+generation=''
+st.session_state['text'] = st.text_area("Enter some text", st.session_state['text'])
 if submit:
     if loc:
-        script_generated = agents.Script_Agent.run(loc)
+        generation = agents.Script_Agent.run(loc)
+        st.session_state['text'] = generation
+        st.session_state['text'] = st.text_area("Generated Script", st.session_state['text'])
         
 
 

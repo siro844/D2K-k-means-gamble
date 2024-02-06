@@ -142,7 +142,7 @@ if submit:
         st.session_state['text'] = ''
     st.session_state['text'] = st.text_area("Relevant hashtags are :", st.session_state['text'])
         
-    st.session_state['text'] = st.text_area("Relevant caption is :", st.session_state['text'],key="23")
+    # st.session_state['text'] = st.text_area("Relevant caption is :", st.session_state['text'],key="23")
      
         
     
