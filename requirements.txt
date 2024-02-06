@@ -4,9 +4,11 @@ python-dotenv
 ritetag
 huggingface_hub
      
-google
+google-generativeaibase64
 av
 numpy
 torch
 transformers
 pillow
+streamlit
+pybase64
