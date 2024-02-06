@@ -1,10 +1,13 @@
 import streamlit as st
 import base64
+from gen_ai.surabhi.py import image_to_text
+from gen_ai.surabhi.py import video_to_text
 
 def get_img_as_base64(file):
     with open(file, "rb") as f:
         data = f.read()
     return base64.b64encode(data).decode()
+
 
 img = get_img_as_base64("ui/Home.png")
 
@@ -93,4 +96,7 @@ st.multiselect("Target Audience", ["Kids", "Teenagers", "Adults", "Senior Citize
 
 submit = st.button("Submit")
 if submit:
+
     st.text_area("The relevant hashtags are")
+
+
