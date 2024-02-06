@@ -5,7 +5,7 @@ import sys
 import os
 import tempfile
 import surabhi
-
+import agents
 
 def get_img_as_base64(file):
     with open(file, "rb") as f:
@@ -95,25 +95,43 @@ elif input_method == "Photo":
             f.write(image_input.getvalue())
 
 elif input_method == "Video":
-    st.file_uploader("Generate hashtags for this image", type=['mp4', 'avi'])
+        video_input = st.file_uploader("Generate hashtags for this image", type=['jpg', 'jpeg', 'png', 'webp'])
+        if video_input is not None:
+    # Save the uploaded file to a temporary location
+            file_path = os.path.join('upload', video_input.name)
+            with open(file_path, "wb") as f:
+                f.write(video_input.getvalue())
 
 st.markdown("### Choose Platform")
 
-st.radio("", ["Instagram", "Youtube", "Facebook"])
+platform =st.radio("", ["Instagram", "Youtube", "Facebook"])
 
 st.multiselect("Target Audience", ["Kids", "Teenagers", "Adults", "Senior Citizens"])
 
 submit = st.button("Submit")
 final_text = ''
+hashtags=''
 if submit:
     if input_method == 'Text':
         final_text = text_input
+        hashtags = agents.hashtag_agent.run(f"{final_text}")
+        st.session_state['text'] = hashtags
     elif input_method == 'Image':
         final_text = surabhi.image_to_text(file_path)
-        st.write(final_text)
+        hashtags=agents.hashtag_agent.run(final_text)
+        st.write(hashtags)
     elif input_method == 'Video':
-        pass
-        # final_text = surabhi.video_to_text()
-    st.text_area("The relevant hashtags are")
+         final_video = surabhi.video_to_text()
+         hashtags=agents.hashtag_agent.run(final_video)
+         hashtags=agents.hashtag_agent.run(final_video)
+        #  st.write(hashtags)
+        
+    
+    
+if 'text' not in st.session_state:
+    st.session_state['text'] = ''
 
-st.write(final_text)
+# Create a text area and get the entered text
+st.session_state['text'] = st.text_area("Relevant hashtags are :", st.session_state['text'])
+st.write(f'Relevant hashtags are : {st.session_state["text"]}')
+# st.write(final_text)
