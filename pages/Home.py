@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 import os
 import tempfile
-import surabhi
+import text_conversion
 import PIL.Image
 
 import agents
@@ -121,20 +121,19 @@ if submit:
         st.session_state['text'] = hashtags  
     elif input_method == 'Photo':
         conv_img = PIL.Image.open(file_path)
-        final_text = surabhi.image_to_text(conv_img) 
+        final_text = text_conversion.image_to_text(conv_img) 
         hashtags=agents.hashtag_agent.run(f" this is the decription of the iamge perform feauture extraction on this :{final_text}")
         st.session_state['text'] = hashtags  
     elif input_method == 'Video':
-         final_video = surabhi.video_to_text(file_path)
+         final_video = text_conversion.video_to_text(file_path)
          hashtags=agents.hashtag_agent.run(final_video)
 
         #  st.write(hashtags)
     if 'text' not in st.session_state:
         st.session_state['text'] = ''
     st.session_state['text'] = st.text_area("Relevant hashtags are :", st.session_state['text'])
-     
-        
-    
+
+
     
 # if 'text' not in st.session_state:
 #     st.session_state['text'] = ''
