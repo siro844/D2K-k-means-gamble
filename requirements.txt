@@ -12,3 +12,4 @@ transformers
 pillow
 streamlit
 pybase64
+pathlib
