@@ -13,3 +13,4 @@ pillow
 streamlit
 pybase64
 pathlib
+bs4
