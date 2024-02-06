@@ -70,7 +70,10 @@ def scraping_hashtags(platform:str):
 trending_hashtags_tool=Tool(
     name="trending_hashtags",
     func=get_trending_hashtags,
-    description="Get the trending hashtags on twitter and their engagement metrics.This tells you how popular a hashtag is on twitter and how much engagement it has.",
+    description="""
+    Only use this when platform is twitter and always use this in combination with the feauture_extraction tool and the scraping_hashtags tool.
+    Get the trending hashtags on twitter and their engagement metrics.This tells you how popular a hashtag is on twitter and how much engagement it has.
+            Get multiple hashtags for the given text and then use the engagement metrics to find the most relevant hashtags for the text.""",
     input_variables=[],
     output_variables=["trending_hashtags"]
 )
@@ -78,7 +81,9 @@ trending_hashtags_tool=Tool(
 feauture_extraction_tool=Tool(
     name="feauture_extraction",
     func=extract_feautures,
-    description="Extract feautures from text.Use this tool to extract feautures from text.Then the extracted feautures can be used to find which hashtag is more relevant to the text.",
+    description="""
+    Always use this in combination with the trending_hashtags tool and the scraping_hashtags tool.
+    Use this tool to extract feautures from text.Then the extracted feautures can be used to find which hashtag is more relevant to the text.""",
     input_variables=["text"],
     output_variables=["feautures"]
 )
@@ -86,14 +91,18 @@ feauture_extraction_tool=Tool(
 scraping_hashtags_tool=Tool(
     name="scraping_hashtags",
     func=scraping_hashtags,
-    description="Scrape the trending hashtags on a platform. Use this in case the trending hashtags are not available on the platform you are looking for. This tool will scrape the trending hashtags for you. ",
+    description="""
+    Always use this in combination with the feauture_extraction tool.
+    Scrape the trending hashtags on a platform. Use this in case the trending hashtags are not available on the platform you are looking for. This tool will scrape the trending hashtags for you. """,
     input_variables=["platform"],
     output_variables=["scraped_hashtags"]
 )
 
 
 tools=[feauture_extraction_tool,scraping_hashtags_tool]
-hashtag_llm=OpenAI(model_name="gpt-3.5-turbo-instruct")
+hashtag_llm=OpenAI(
+    model_name="gpt-3.5-turbo-instruct",
+    )
 hashtag_agent=initialize_agent(
     agent='zero-shot-react-description',
     tools=tools,
@@ -102,10 +111,11 @@ hashtag_agent=initialize_agent(
     max_iterations=8,
     llm=hashtag_llm
     )
-print(hashtag_agent.agent.llm_chain.prompt.template)
 hashtag_prompt="""
 You are the Content Strategist at a company .Your role is to find the most relevant hashtags
  to increase the client's social media engagement.
     """
 
-print(hashtag_agent( {"input":"Im posting a ad for coaching classes on LinkedIN?"}))
+print(hashtag_agent( {"input":"Smiling dog who is playing with a ball and eating food"}))
+
+
